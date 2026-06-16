@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Reachable CI Remediation Evidence Flow</title>
+  <desc id="desc">High-level CI flow from code change to Reachable scan database, coding agent remediation, proof scan database, evidence pack, branch, and pull request.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="55%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#07151a"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#172234"/>
+      <stop offset="100%" stop-color="#0d1523"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#39d2c0"/>
+      <stop offset="100%" stop-color="#5b8cff"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22345a"/>
+      <stop offset="100%" stop-color="#12362f"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000814" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 14 14" refX="11" refY="7" markerWidth="11" markerHeight="11" orient="auto-start-reverse">
+      <path d="M1 1 L13 7 L1 13 Z" fill="#5b8cff"/>
+    </marker>
+    <style>
+      .tiny { font: 600 17px ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 2px; }
+      .label { font: 700 27px ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+      .body { font: 500 18px ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+      .mono { font: 700 17px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing: 0; }
+      .muted { fill: #8fa2bd; }
+      .text { fill: #f4f7fb; }
+      .line { stroke: #5b8cff; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .line2 { stroke: #39d2c0; stroke-width: 3; fill: none; marker-end: url(#arrow); stroke-dasharray: 8 10; }
+      .card { fill: url(#panel); stroke: #263951; stroke-width: 2; rx: 24; filter: url(#softShadow); }
+      .agentCard { fill: url(#agent); stroke: #367566; stroke-width: 2; rx: 24; filter: url(#softShadow); }
+      .badge { fill: #0c1a2c; stroke: #28425f; stroke-width: 2; rx: 18; }
+      .success { fill: #0b2b23; stroke: #22c897; stroke-width: 2; rx: 18; }
+      .warn { fill: #2b2208; stroke: #f5c542; stroke-width: 2; rx: 18; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1000" fill="url(#bg)"/>
+  <path d="M88 136 C318 62 456 96 616 150 C812 206 976 154 1164 98 C1364 44 1540 58 1700 140" fill="none" stroke="#0f3a54" stroke-width="3" opacity="0.65"/>
+  <path d="M140 812 C350 758 542 792 730 834 C930 878 1162 850 1368 778 C1520 724 1640 736 1720 790" fill="none" stroke="#164b44" stroke-width="3" opacity="0.55"/>
+
+  <text x="90" y="76" class="tiny" fill="#68d9ff">REACHABLE</text>
+  <text x="90" y="128" class="label text">CI Remediation with DB Proof</text>
+  <text x="90" y="168" class="body muted">Branch-first loop: scan, remediate, rescan, publish evidence.</text>
+  <text x="1500" y="78" class="tiny muted">DEVOPS VIEW</text>
+
+  <rect x="90" y="234" width="260" height="170" class="card"/>
+  <circle cx="144" cy="292" r="27" fill="#13253a" stroke="#4c6f99" stroke-width="2"/>
+  <path d="M129 292 h30 M144 277 v30" stroke="#78d7ff" stroke-width="4" stroke-linecap="round"/>
+  <text x="184" y="284" class="tiny muted">TRIGGER</text>
+  <text x="126" y="336" class="label text">Code</text>
+  <text x="126" y="366" class="label text">Change</text>
+  <text x="126" y="398" class="body muted">workflow trigger</text>
+
+  <path class="line" d="M366 319 H474"/>
+
+  <rect x="490" y="212" width="320" height="220" class="card"/>
+  <text x="526" y="262" class="tiny" fill="#69b7ff">REACHABLE</text>
+  <text x="526" y="306" class="label text">Scan</text>
+  <text x="526" y="336" class="label text">&amp; Rank</text>
+  <text x="526" y="370" class="body muted">signals, reachability,</text>
+  <text x="526" y="397" class="body muted">DB evidence</text>
+  <rect x="526" y="410" width="154" height="36" class="badge"/>
+  <text x="548" y="435" class="mono" fill="#b9c8dc">repo.db</text>
+
+  <path class="line" d="M826 319 H934"/>
+
+  <rect x="950" y="212" width="320" height="220" class="card"/>
+  <text x="986" y="262" class="tiny" fill="#f5c542">CONTROL</text>
+  <text x="986" y="306" class="label text">Kill</text>
+  <text x="986" y="336" class="label text">Switch</text>
+  <text x="986" y="370" class="body muted">remediate=false</text>
+  <text x="986" y="397" class="body muted">scan-only proof</text>
+  <rect x="986" y="410" width="148" height="36" class="warn"/>
+  <text x="1012" y="435" class="mono" fill="#ffe18a">default</text>
+
+  <path class="line" d="M1286 319 H1394"/>
+
+  <rect x="1410" y="212" width="300" height="220" class="card"/>
+  <text x="1446" y="262" class="tiny" fill="#39d2c0">BUNDLE</text>
+  <text x="1446" y="306" class="label text">Fix</text>
+  <text x="1446" y="336" class="label text">Batch</text>
+  <text x="1446" y="370" class="body muted">bounded fixes</text>
+  <text x="1446" y="397" class="body muted">with proof</text>
+  <rect x="1446" y="410" width="158" height="36" class="badge"/>
+  <text x="1470" y="435" class="mono" fill="#b9c8dc">bounded</text>
+
+  <path class="line2" d="M1110 466 V504 H368 V438"/>
+  <rect x="690" y="522" width="180" height="40" rx="20" fill="#07111f" stroke="#164b44" stroke-width="1"/>
+  <text x="732" y="548" class="mono" fill="#6debdc">scan-only</text>
+
+  <path class="line" d="M1560 450 V568"/>
+
+  <rect x="1260" y="590" width="450" height="280" class="agentCard"/>
+  <text x="1298" y="640" class="tiny" fill="#9debdc">AGENT EXECUTOR</text>
+  <text x="1298" y="680" class="label text">Codex</text>
+  <text x="1392" y="680" class="body muted">(OpenAI)</text>
+  <text x="1298" y="718" class="label text">Claude Code</text>
+  <text x="1468" y="718" class="body muted">(Anthropic)</text>
+  <text x="1298" y="770" class="body muted">edits review branch</text>
+  <text x="1298" y="796" class="body muted">from bounded task</text>
+  <rect x="1298" y="820" width="92" height="36" class="badge"/>
+  <text x="1316" y="844" class="mono" fill="#b9c8dc">agent</text>
+  <rect x="1408" y="820" width="96" height="36" class="badge"/>
+  <text x="1424" y="844" class="mono" fill="#b9c8dc">cost</text>
+  <rect x="1522" y="820" width="96" height="36" class="badge"/>
+  <text x="1540" y="844" class="mono" fill="#b9c8dc">audit</text>
+
+  <path class="line" d="M1246 692 H1134"/>
+
+  <rect x="860" y="590" width="260" height="205" class="card"/>
+  <text x="896" y="640" class="tiny" fill="#69b7ff">BRANCH</text>
+  <text x="896" y="684" class="label text">Review</text>
+  <text x="896" y="722" class="body muted">changes land on</text>
+  <text x="896" y="752" class="body muted">remediate branch</text>
+
+  <path class="line" d="M846 692 H738"/>
+
+  <rect x="380" y="590" width="350" height="205" class="card"/>
+  <text x="430" y="640" class="tiny" fill="#39d2c0">PROOF</text>
+  <text x="430" y="684" class="label text">Rescan</text>
+  <text x="430" y="714" class="label text">+ Proof</text>
+  <text x="430" y="750" class="body muted">proof DB</text>
+  <text x="430" y="778" class="body muted">evidence pack</text>
+  <rect x="430" y="792" width="250" height="36" class="success"/>
+  <text x="452" y="816" class="mono" fill="#8ef4d4">zero release blockers</text>
+
+  <path class="line" d="M366 692 H280"/>
+
+  <rect x="90" y="590" width="190" height="205" class="card"/>
+  <text x="126" y="640" class="tiny" fill="#69b7ff">OUTPUT</text>
+  <text x="126" y="684" class="label text">Pull</text>
+  <text x="126" y="714" class="label text">Request</text>
+  <text x="126" y="750" class="body muted">evidence</text>
+  <text x="126" y="778" class="body muted">attached</text>
+
+  <rect x="90" y="900" width="1620" height="56" rx="28" fill="#0b1524" stroke="#20354f" stroke-width="2"/>
+  <rect x="116" y="916" width="250" height="26" rx="13" fill="url(#accent)"/>
+  <text x="392" y="936" class="mono" fill="#b9c8dc">CI controls: scan-only · remediate · verify branch · bounded batches · PR · publish evidence</text>
+</svg>

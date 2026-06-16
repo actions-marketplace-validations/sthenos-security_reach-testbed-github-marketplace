@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reachable Go Testbed Expected Results</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: #101a2b;
+      --panel-2: #172235;
+      --line: #273a55;
+      --text: #f4f7fb;
+      --muted: #9aa9bd;
+      --blue: #5b8cff;
+      --teal: #39d2c0;
+      --yellow: #f5c542;
+      --red: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    main {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 36px 0 56px;
+    }
+    header {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+    .brand {
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .diagram {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #081320;
+      margin: 18px 0 28px;
+      display: block;
+      max-height: 680px;
+      object-fit: contain;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 26px 0;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      padding: 18px;
+      min-height: 120px;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 8px;
+    }
+    .link-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #0c1728;
+      color: #d7e4f6;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 8px 12px;
+      text-decoration: none;
+    }
+    .link-chip:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+    .safety-banner {
+      border: 1px solid rgba(245, 197, 66, 0.55);
+      border-radius: 8px;
+      background: rgba(245, 197, 66, 0.10);
+      color: #ffe59a;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.45;
+      padding: 12px 14px;
+    }
+    .safety-banner strong {
+      color: #fff3c4;
+    }
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .metric {
+      font-size: 42px;
+      font-weight: 850;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    section {
+      margin-top: 34px;
+    }
+    h2 {
+      font-size: 24px;
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    h2[id] { scroll-margin-top: 24px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .table-wrap table {
+      border: 0;
+      border-radius: 0;
+      min-width: 1380px;
+    }
+    .filter {
+      width: min(560px, 100%);
+      margin: 0 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0c1728;
+      color: var(--text);
+      font: 600 15px ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 12px 14px;
+      outline: none;
+    }
+    .filter:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(57, 210, 192, 0.16);
+    }
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+    th {
+      background: #132037;
+      color: #b8c7dc;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: 0; }
+    code {
+      color: #8fc4ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.95em;
+    }
+    a { color: #8fc4ff; }
+    a:hover { color: #39d2c0; }
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .critical { color: var(--red); }
+    .high { color: var(--yellow); }
+    .medium { color: #ffb454; }
+    .ok { color: var(--teal); }
+    .blue { color: var(--blue); }
+    .note {
+      border-left: 4px solid var(--teal);
+      background: #0d1c2c;
+      padding: 16px 18px;
+      border-radius: 8px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="brand">Reachable demo based on Go testbed</div>
+      <h1>Go Testbed Expected Results</h1>
+      <div class="safety-banner">
+        <strong>Intentionally vulnerable testbed.</strong>
+        This repository is for Reachable scanner validation and controlled demos
+        only. Do not deploy or reuse it as production application code.
+      </div>
+      <p>
+        A compact demo for CI scanning and agent-driven remediation.
+        It proves that Reachable can identify the release-blocking queue from
+        database evidence, generate a bounded remediation task,
+        let an agent patch a review branch, and rescan that branch to zero
+        release blockers.
+      </p>
+    </header>
+
+    <section>
+      <h2>Evidence Links</h2>
+      <p>
+        This page explains the demo contract. The current run status, source
+        code, workflow definition, expected contract, and published proof
+        artifacts are linked here so the evidence can be traced.
+      </p>
+      <div class="links">
+        <a class="link-chip" href="https://github.com/sthenos-security/reach-testbed-github-marketplace/actions/workflows/reachable-remediate.yml">Workflow runs</a>
+        <a class="link-chip" href="https://github.com/sthenos-security/reach-testbed-github-marketplace/blob/main/.github/workflows/reachable-remediate.yml">Workflow code</a>
+        <a class="link-chip" href="https://github.com/sthenos-security/reach-testbed-github-marketplace">Repository code</a>
+        <a class="link-chip" href="expected-results.html">Branded contract page</a>
+        <a class="link-chip" href="https://github.com/sthenos-security/reach-testbed-github-marketplace/blob/main/expected/baseline.json">Machine-readable contract</a>
+        <a class="link-chip" href="index.html">Last published proof page</a>
+        <a class="link-chip" href="index.html#artifacts">Published artifacts</a>
+        <a class="link-chip" href="db-remediation-verdict.json">DB verdict artifact</a>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <div class="eyebrow">DB Signals</div>
+        <div class="metric">28</div>
+        <p>Expected raw scanner truth on <code>main</code>.</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Release Blockers</div>
+        <div class="metric">18</div>
+        <p>Release-blocking queue before remediation.</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Evidence Rows</div>
+        <div class="metric">21</div>
+        <p>DB evidence rows used in the public proof.</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Proof Target</div>
+        <div class="metric ok">0</div>
+        <p>Release blockers after remediation.</p>
+      </div>
+    </div>
+
+    <section>
+      <h2>What Had To Be Fixed</h2>
+      <p>
+        This is the release decision view. These are the baseline problems that
+        must disappear from the remediation proof scan before the branch is safe
+        to review and merge.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Release category</th>
+            <th>Rows before</th>
+            <th>Expected proof</th>
+            <th>Remediated?</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Exploitable blockers</td><td>9</td><td>0</td><td>Yes</td><td>Enzo attacker proved external control and impact. These are mandatory fixes.</td></tr>
+          <tr><td>Not-attacked / exposure blockers</td><td>9</td><td>0</td><td>Yes</td><td>No attacker proof is required for reachable CVEs, embedded secrets, PII/DLP exposure, or AI-boundary authority risk. They still block release while present.</td></tr>
+          <tr><td>Defended attacker evidence</td><td>3</td><td>0 blockers</td><td>No, unless a fix naturally removes them</td><td>Reachable found the path, but Enzo attacker could not prove a practical attack. These rows are audit evidence, not release blockers.</td></tr>
+          <tr><td>Filtered fixture evidence</td><td>7</td><td>Nonblocking</td><td>No</td><td>Synthetic not-reachable or non-production markers prove scanner coverage and are not part of the fix queue.</td></tr>
+          <tr><td><strong>Total raw DB signals</strong></td><td><strong>28</strong></td><td><strong>0 release blockers</strong></td><td><strong>18 remediated blockers</strong></td><td>The proof scan passes when the release-blocking queue is zero.</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Fix category</th>
+            <th>Rows</th>
+            <th>Exploitability</th>
+            <th>Why it blocks release</th>
+            <th>Expected proof after remediation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Application attack paths</td><td>9</td><td>Exploitable</td><td>Enzo attacker evidence says reachable CWE/AI paths are attackable, including command execution, SSRF/fetch, and externally visible error disclosure.</td><td>Those rows are absent from the proof scan.</td></tr>
+          <tr><td>Dependency risk</td><td>1</td><td>Reachable, not attack-proofed</td><td>A reachable Go dependency has a fix-available vulnerability.</td><td>The fixed dependency version is used and the CVE row is absent.</td></tr>
+          <tr><td>Secret exposure</td><td>1</td><td>Exposure</td><td>A synthetic production-shaped token is embedded in application code.</td><td>The token row is absent; fixture-only markers remain non-actionable.</td></tr>
+          <tr><td>DLP / PII exposure</td><td>2</td><td>Exposure</td><td>Synthetic personal data is logged or sent to an outbound endpoint.</td><td>Raw personal data exposure rows are absent.</td></tr>
+          <tr><td>AI boundary and tool-risk rows</td><td>5</td><td>Exploitable / exposure / authority risk</td><td>LLM calls, sensitive context, tool instructions, and unguarded user flows cross AI trust boundaries.</td><td>The AI rows are absent or covered by the underlying code fix.</td></tr>
+          <tr><td><strong>Total release blockers</strong></td><td><strong>18</strong></td><td><strong>Actionable</strong></td><td>Baseline queue that must be fixed before release.</td><td><strong>0 release blockers after remediation.</strong></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Defendable And Nonblocking Evidence</h2>
+      <p>
+        These rows are still part of the baseline evidence, but they are not the
+        final release-blocking queue. They explain why the raw database has more
+        signals than the fix queue.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Evidence category</th>
+            <th>Rows</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Defended attacker rows</td><td>3</td><td>Reachable paths reviewed by Enzo attacker and classified as defended, not exploitable.</td></tr>
+          <tr><td>Non-production or not-reachable fixture markers</td><td>7</td><td>Synthetic detector coverage rows such as workflow variable names and fixture markers.</td></tr>
+          <tr><td><strong>Total nonblocking evidence</strong></td><td><strong>10</strong></td><td>Tracked for auditability, not counted as release blockers.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Why Defended Rows Do Not Block Release</h2>
+      <p>
+        Reachable keeps defended rows in the evidence when it finds a
+        security-shaped sink, but Enzo attacker cannot prove an external
+        attacker can drive that sink to impact. That gives the release owner an
+        audit trail without forcing a non-exploitable item into the fix queue.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Defended row</th>
+            <th>Why it was found</th>
+            <th>What blocks the attack</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>CWE/200</code><br><code>internal/handlers/cve.go:16</code></td><td>The handler returns an internal request-body read error string.</td><td>The body is read through <code>io.LimitReader</code>, so the request body is bounded; this path is an I/O failure path, not attacker-controlled parser content.</td></tr>
+          <tr><td><code>CWE/200</code><br><code>internal/handlers/cve.go:38</code></td><td><code>language.Parse</code> can produce detailed parsing errors.</td><td>The route first calls <code>safety.AllowedLanguageTag</code>, which allows only <code>en</code>, <code>en-US</code>, <code>fr</code>, <code>fr-FR</code>, <code>es</code>, and <code>es-ES</code>. Attacker-chosen language tags do not reach the parser.</td></tr>
+          <tr><td><code>CWE/200</code><br><code>internal/handlers/suspicious.go:24</code></td><td>The tool-fetch route returns an <code>os.Create</code> error.</td><td>The local file path is fixed with <code>filepath.Join(os.TempDir(), "reach-testbed-tool.bin")</code>. The caller controls the source URL, not the local file path that could shape this error.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">
+        Decision rule: if Enzo attacker proves external control and impact, the
+        row is exploitable and blocks release. If a guard, fixed value, or
+        internal-only branch prevents that proof, the row stays visible as
+        defended evidence.
+      </div>
+    </section>
+
+    <section>
+      <h2>Baseline Signal Breakdown</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Family</th>
+            <th>Expected signals</th>
+            <th>Release blockers</th>
+            <th>Exploitable</th>
+            <th>Defended / evidence</th>
+            <th>Expected proof</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="pill blue">CVE</span></td><td>1</td><td>1</td><td>0</td><td>1 reachable dependency row</td><td>Fixed dependency version; no vulnerable dependency row in proof scan.</td></tr>
+          <tr><td><span class="pill critical">CWE</span></td><td>12</td><td>9</td><td>8</td><td>3 defended rows</td><td>Command execution, SSRF/network fetch, and blocking error disclosure rows disappear after remediation.</td></tr>
+          <tr><td><span class="pill medium">Secret</span></td><td>8</td><td>1</td><td>0</td><td>1 exposure row, 7 filtered fixture rows</td><td>Synthetic production token is removed; fixture markers remain non-actionable.</td></tr>
+          <tr><td><span class="pill critical">DLP</span></td><td>2</td><td>2</td><td>0</td><td>2 exposure rows</td><td>Synthetic personal data is no longer logged or sent outbound.</td></tr>
+          <tr><td><span class="pill critical">AI</span></td><td>5</td><td>5</td><td>1</td><td>4 reachable AI-boundary rows</td><td>LLM/data-boundary and unguarded user-flow rows are removed or covered by the underlying code fix.</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>28</strong></td><td><strong>18</strong></td><td><strong>9</strong></td><td><strong>19</strong></td><td>The proof scan must show zero release blockers before the branch is ready to review and merge.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">
+        Trust model: the expected results are declared in
+        <a href="https://github.com/sthenos-security/reach-testbed-github-marketplace/blob/main/expected/baseline.json">expected/baseline.json</a>.
+        CI validates the vulnerable baseline scan database against that contract,
+        then validates the remediation proof scan database to confirm the same
+        release blockers are gone. The proof is a database comparison, not a
+        hand-written status claim.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="expected-findings-table">Expected Findings</h2>
+      <p>
+        The table separates the dimensions a release owner needs to understand:
+        raw DB signal count, risk, reachability, and exploitability. A row with
+        more than one DB signal is an explicit group, not a hidden assumption.
+      </p>
+      <input class="filter" id="findingFilter" type="search" placeholder="Filter findings by ID, type, risk, reachability, exploitability, file, or remediation">
+      <div class="table-wrap">
+      <table id="expectedFindingsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>DB signals</th>
+            <th>Type</th>
+            <th>Risk</th>
+            <th>Reachability</th>
+            <th>Exploitability</th>
+            <th>Location</th>
+            <th>Explanation</th>
+            <th>Remediation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>GO-CVE-01</td><td>1</td><td>CVE-2022-32149 / <code>golang.org/x/text</code></td><td>High</td><td>Reachable</td><td>Not attack-proofed</td><td><code>internal/handlers/cve.go</code>; <code>go.mod</code></td><td>A public language parsing route exercises an old dependency with a denial-of-service advisory.</td><td>Upgrade <code>golang.org/x/text</code> to a fixed version and keep route-level input validation.</td></tr>
+          <tr><td>GO-CWE-01<br><span class="pill medium">Deferred</span></td><td>1</td><td>CWE / command injection</td><td>Critical</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/cwe.go</code></td><td>A request parameter is concatenated into a shell command. A caller could turn a diagnostic endpoint into command execution. This case remains in the vulnerable baseline contract, but is temporarily deferred from the autonomous-remediation proof because the current agent loop leaves <code>DiagnosticPing</code> unchanged when <code>SafeDiagnosticPing</code> already exists.</td><td>Manual-review/deferred for this demo. The reach-core follow-up is to tighten the remediation prompt so the agent modifies <code>DiagnosticPing</code> itself.</td></tr>
+          <tr><td>GO-CWE-02</td><td>1</td><td>CWE / user-controlled URL fetch</td><td>Critical</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/suspicious.go</code></td><td>An admin route downloads from a caller-supplied URL. This models unsafe tool staging and SSRF-style fetch behavior.</td><td>Restrict sources to a trusted allowlist, require authentication, verify checksums/signatures, and avoid arbitrary outbound fetches.</td></tr>
+          <tr><td>GO-CWE-03</td><td>1</td><td>CWE / SSRF HTTP client</td><td>Medium</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/suspicious.go</code></td><td>User input reaches an HTTP client, so server-side infrastructure could be asked to call untrusted destinations.</td><td>Use URL validation, deny private/internal ranges, enforce trusted schemes/hosts, and add timeouts.</td></tr>
+          <tr><td>GO-CWE-04</td><td>3</td><td>CWE / error disclosure</td><td>Medium</td><td>Mixed blocking/nonblocking</td><td>Mixed exploitable/defended</td><td><code>internal/handlers/cve.go</code></td><td>Parser errors are returned directly to clients, potentially exposing implementation details; non-attacker-controlled instances are retained as nonblocking evidence.</td><td>Return generic client errors and log details internally.</td></tr>
+          <tr><td>GO-CWE-05</td><td>3</td><td>CWE / error disclosure</td><td>Medium</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/ai.go</code></td><td>JSON decoding errors are returned directly from AI endpoints.</td><td>Return generic bad-request text and preserve details only in structured logs.</td></tr>
+          <tr><td>GO-CWE-06</td><td>3</td><td>CWE / error disclosure</td><td>Medium</td><td>Mixed blocking/nonblocking</td><td>Mixed exploitable/defended</td><td><code>internal/handlers/suspicious.go</code></td><td>Network, file, and copy errors from the tool-fetch path are exposed to callers; one internal-only instance is retained as nonblocking evidence.</td><td>Return generic operational errors; keep internal details in logs or audit events.</td></tr>
+          <tr><td>GO-SECRET-01</td><td>1</td><td>Secret / GitHub token shape</td><td>Medium</td><td>Reachable</td><td>Exposure</td><td><code>internal/handlers/secrets.go</code></td><td>A synthetic GitHub-shaped token is embedded in code and returned by an API. In a real system this would be a credential leak.</td><td>Rotate the value, remove it from code, load it from a secret manager, and never return it in responses.</td></tr>
+          <tr><td>GO-SECRET-02</td><td>1</td><td>Secret / AWS access key shape</td><td>Info</td><td>Not reachable</td><td>Not applicable</td><td><code>internal/handlers/secrets.go</code></td><td>An AWS-shaped synthetic marker is present for detector coverage but is filtered as non-actionable in the latest proof.</td><td>Keep only synthetic test markers in fixtures; never put real cloud credentials in source.</td></tr>
+          <tr><td>GO-SECRET-03</td><td>6</td><td>Secret / workflow token variables</td><td>Info</td><td>Not reachable / non-production</td><td>Not applicable</td><td><code>.github/workflows/reachable-remediate.yml</code></td><td><code>GITHUB_TOKEN</code> and <code>GH_TOKEN</code> are environment variable names used by GitHub tooling, not real secret values.</td><td>No code fix required. They should remain filtered/non-actionable.</td></tr>
+          <tr><td>GO-DLP-01</td><td>1</td><td>DLP / PII to log</td><td>Critical</td><td>Reachable</td><td>Exposure</td><td><code>internal/handlers/dlp.go</code></td><td>Synthetic SSN and date-of-birth values are written to logs. In production this would create regulated-data exposure.</td><td>Mask sensitive values, minimize logging, and add structured audit logging without raw identifiers.</td></tr>
+          <tr><td>GO-DLP-02</td><td>1</td><td>DLP / PII to outbound HTTP</td><td>Critical</td><td>Reachable</td><td>Exposure</td><td><code>internal/handlers/dlp.go</code></td><td>Synthetic personal data is sent to an external analytics endpoint.</td><td>Remove raw PII from outbound telemetry, tokenize fields, and enforce data-sharing controls.</td></tr>
+          <tr><td>GO-AI-01</td><td>1</td><td>AI / LLM API call with sensitive context</td><td>Critical</td><td>Reachable</td><td>Exposure</td><td><code>internal/handlers/ai.go</code></td><td>User-controlled prompt content is sent to an LLM call in an admin-style context.</td><td>Separate system and user messages, treat user content as data, and apply policy checks before model calls.</td></tr>
+          <tr><td>GO-AI-02</td><td>1</td><td>AI / agent tool instruction risk</td><td>Critical</td><td>Reachable</td><td>Reachable authority risk</td><td><code>internal/handlers/ai.go</code></td><td>User input is mixed into an internal automation-agent tool specification.</td><td>Use constrained tool schemas, allowlisted actions, explicit authorization, and policy checks.</td></tr>
+          <tr><td>GO-AI-03</td><td>1</td><td>AI / unguarded flow to command execution</td><td>Medium</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/cwe.go</code></td><td>Reachable taint flow confirms the command-injection path has user-controlled input.</td><td>Fixed by the command-injection remediation.</td></tr>
+          <tr><td>GO-AI-04</td><td>1</td><td>AI / unguarded flow to error/output response</td><td>Medium</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/cwe.go</code></td><td>User-controlled diagnostic behavior can influence returned output.</td><td>Fixed by removing shell execution and normalizing errors.</td></tr>
+          <tr><td>GO-AI-05</td><td>1</td><td>AI / unguarded flow to network fetch</td><td>Medium</td><td>Reachable</td><td>Exploitable</td><td><code>internal/handlers/suspicious.go</code></td><td>User input controls the outbound fetch destination.</td><td>Fixed by the URL allowlist and SSRF controls.</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>28</strong></td><td colspan="7">Raw DB signals represented by the grouped expected-finding contract.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note">
+        This table is the expected-finding contract: 17 grouped rows representing
+        28 raw DB signals. The branded contract page is this page; the source
+        Markdown is stored in the repository, and the machine-readable contract is
+        <a href="https://github.com/sthenos-security/reach-testbed-github-marketplace/blob/main/expected/baseline.json">expected/baseline.json</a>.
+        CI checks the scan database against that contract before and after
+        remediation.
+      </div>
+    </section>
+
+    <section>
+      <h2>CI Flow Overview</h2>
+      <p>
+        The flow below is supporting context. The verdict itself comes from the
+        scan database and the expected-finding contract above.
+      </p>
+      <img class="diagram" src="remediation-flow.svg" alt="Reachable CI autoremediation process flow">
+    </section>
+
+    <section>
+      <h2>Workflow Details</h2>
+      <p>
+        This page is the contract and evidence view. The CI mechanics, inputs,
+        guardrails, and repository layout live in the
+        <a href="https://github.com/sthenos-security/reach-testbed-github-marketplace#ci-validation-flow">repository README</a>
+        and the
+        <a href="https://github.com/sthenos-security/reach-testbed-github-marketplace/blob/main/.github/workflows/reachable-remediate.yml">Reachable Remediation Template workflow</a>.
+      </p>
+    </section>
+    <footer>Copyright © 2026 Sthenos Security, Inc. All rights reserved.</footer>
+  </main>
+  <script>
+    const filter = document.getElementById('findingFilter');
+    const rows = Array.from(document.querySelectorAll('#expectedFindingsTable tbody tr'));
+    filter?.addEventListener('input', () => {
+      const query = filter.value.trim().toLowerCase();
+      for (const row of rows) {
+        row.hidden = query.length > 0 && !row.textContent.toLowerCase().includes(query);
+      }
+    });
+  </script>
+</body>
+</html>
