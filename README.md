@@ -28,10 +28,10 @@ used for Reachable scan AI and the selected remediation coding-agent
 integration.
 
 For customer-facing marketplace runs, configure `MCP_GITHUB_TOKEN` as well. It
-materially improves clone/source/package context and should be treated as part
-of the expected higher-data-quality setup. Reachable uses this token for GitHub
-MCP source context and for plain git clone fallback when MCP cannot fetch a
-package source directly.
+materially improves clone/source/package access and should be treated as part
+of the expected higher-data-quality setup. Reachable uses this token for
+GitHub-hosted source reads, MCP GitHub cloning, and plain git clone fallback
+when MCP cannot fetch a package source directly.
 
 | Lane | Secret |
 |------|--------|
