@@ -30,8 +30,8 @@ integration.
 For customer-facing marketplace runs, configure `MCP_GITHUB_TOKEN` as well. It
 materially improves clone/source/package access and should be treated as part
 of the expected higher-data-quality setup. Reachable uses this token for
-GitHub-hosted source reads, MCP GitHub cloning, and plain git clone fallback
-when MCP cannot fetch a package source directly.
+GitHub-hosted source reads, MCP GitHub cloning, and the explicit plain git
+clone source path when MCP cannot fetch a package source directly.
 
 | Lane | Secret |
 |------|--------|
@@ -116,6 +116,10 @@ generated for platform compatibility, but it is only an export report.
 
 The workflow publishes sanitized evidence only:
 
+After a successful Pages deployment, the public proof page is available at:
+
+<https://sthenos-security.github.io/reach-testbed-github-marketplace/>
+
 | Artifact | Purpose |
 |----------|---------|
 | `reachable.sarif` | Compatibility export for GitHub Code Scanning. |
@@ -129,11 +133,20 @@ rule packs, agent transcripts, raw witnesses, or local databases.
 
 ## Local Validation
 
-Run the lightweight checks before publishing changes:
+Run the lightweight local checks before publishing changes:
 
 ```bash
 go test ./...
 python3 ci/smoke-db-remediation-proof.py
-python3 ci/validate-expected-results.py
 python3 ci/smoke-pages-summary.py
+```
+
+After a Reachable scan has produced `repo.db` and SARIF artifacts, validate the
+scanner output against the golden baseline:
+
+```bash
+python3 ci/validate-expected-results.py \
+  --db path/to/repo.db \
+  --scan-id 1 \
+  --sarif path/to/reachable.sarif
 ```
