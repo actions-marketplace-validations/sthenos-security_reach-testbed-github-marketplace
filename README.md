@@ -1,8 +1,8 @@
-# REACHABLE For GitHub Marketplace
+# ΣREACHABLE For GitHub Marketplace
 
 Repository: `reach-testbed-github-marketplace`
 
-REACHABLE GitHub Marketplace distribution repo.
+ΣREACHABLE GitHub Marketplace distribution repo.
 
 This repo is the public Marketplace distribution surface for REACHABLE on
 GitHub. Use it for code exploitability analysis and risk posture reduction in
@@ -10,6 +10,11 @@ GitHub Actions. It uses the reusable
 [`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github)
 toolkit and defaults to the Codex remediation lane while still allowing the
 user to switch AI modes.
+
+`ΣREACHABLE` is the visual brand mark. The searchable Marketplace action name
+remains `Reachable Security Scan and Remediation`, and configuration examples
+use `REACHABLE` / `reachable` names so users can find and install the action
+without typing the sigma character.
 
 The repository also exposes a root GitHub Action metadata file,
 [`action.yml`](action.yml), so GitHub can list REACHABLE in the Actions
