@@ -1,0 +1,170 @@
+name: Reachable Security Scan and Remediation
+author: Sthenos Security
+description: Marketplace entrypoint for REACHABLE scan and reviewable remediation. Defaults to Codex and supports Claude through ai-mode.
+
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  target-branch:
+    description: Branch to report as the baseline or proof branch. Defaults to the current checkout branch when omitted.
+    required: false
+    default: ""
+  remediate:
+    description: Run code-changing remediation instead of a read-only proof scan.
+    required: false
+    default: "true"
+  rescan-only:
+    description: Skip editing and run only the proof scan on the current checkout.
+    required: false
+    default: "false"
+  ai-mode:
+    description: Public AI lane selector. Use openai-codex, openai-gpt, or anthropic-claude.
+    required: false
+    default: openai-codex
+  agent-model:
+    description: Optional explicit remediation model override.
+    required: false
+    default: ""
+  agent-timeout-sec:
+    description: Per-batch coding-agent timeout in seconds.
+    required: false
+    default: "1800"
+  prompt-profile:
+    description: Reachable remediation prompt profile.
+    required: false
+    default: balanced
+  signal-types:
+    description: Comma-separated signal families, or all.
+    required: false
+    default: all
+  max-batches:
+    description: Maximum remediation batches to attempt.
+    required: false
+    default: "1"
+  rescan-strategy:
+    description: Rescan after each batch or only once at the end.
+    required: false
+    default: each_batch
+  fail-on:
+    description: Customer-facing verdict threshold.
+    required: false
+    default: exploitable
+  proof-fail-on:
+    description: Optional explicit proof-scan threshold. Defaults to fail-on when empty.
+    required: false
+    default: ""
+  scan-extra-flags:
+    description: Extra reachctl scan flags to append.
+    required: false
+    default: ""
+  create-pr:
+    description: Open a remediation PR when a branch is pushed successfully.
+    required: false
+    default: "true"
+  publish-report:
+    description: Render the standardized Reachable proof page and exports.
+    required: false
+    default: "true"
+  upload-artifacts:
+    description: Upload .reachable/ci-artifacts as a workflow artifact.
+    required: false
+    default: "true"
+  publish-pages:
+    description: Publish the rendered proof page to GitHub Pages when report output exists.
+    required: false
+    default: "false"
+  artifact-name:
+    description: Artifact name used when upload-artifacts=true.
+    required: false
+    default: reachable-ci-artifacts
+  require-ai:
+    description: Fail early when the selected lane is missing its required AI key.
+    required: false
+    default: "true"
+  fresh-scan:
+    description: Delete ~/.reachable before installation.
+    required: false
+    default: "false"
+  reachable-dist-repo:
+    description: Distribution repository containing install.sh.
+    required: false
+    default: sthenos-security/reach-dist
+  openai-api-key:
+    description: Optional OpenAI key override. When omitted, OPENAI_API_KEY from env is used.
+    required: false
+    default: ""
+  anthropic-api-key:
+    description: Optional Anthropic key override. When omitted, ANTHROPIC_API_KEY from env is used.
+    required: false
+    default: ""
+  reachable-api-key:
+    description: Optional Reachable paid-plan token. When omitted, REACHABLE_API_KEY from env is used.
+    required: false
+    default: ""
+  reachable-github-token:
+    description: Optional Reachable GitHub token consumed by Reachable internals.
+    required: false
+    default: ""
+  mcp-github-token:
+    description: Read-only GitHub token for richer source and package context.
+    required: false
+    default: ""
+
+outputs:
+  remediation-branch:
+    description: Remediation branch name when a branch lane ran.
+    value: ${{ steps.delegate.outputs.remediation-branch }}
+  remediation-committed:
+    description: Whether the remediation core produced a commit.
+    value: ${{ steps.delegate.outputs.remediation-committed }}
+  proof-commit:
+    description: Commit used for the final proof page.
+    value: ${{ steps.delegate.outputs.proof-commit }}
+  pr-url:
+    description: Remediation pull request URL when one was opened.
+    value: ${{ steps.delegate.outputs.pr-url }}
+  pr-created:
+    description: Whether a remediation pull request was opened automatically.
+    value: ${{ steps.delegate.outputs.pr-created }}
+  page-url:
+    description: GitHub Pages URL when publish-pages=true and deployment succeeded.
+    value: ${{ steps.delegate.outputs.page-url }}
+  artifact-dir:
+    description: Directory containing sanitized Reachable CI artifacts.
+    value: ${{ steps.delegate.outputs.artifacts-path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Delegate to Reachable GitHub toolkit
+      id: delegate
+      uses: sthenos-security/reach-ci-github@v1
+      with:
+        target_branch: ${{ inputs.target-branch }}
+        remediate: ${{ inputs.remediate }}
+        rescan_only: ${{ inputs.rescan-only }}
+        ai_mode: ${{ inputs.ai-mode }}
+        agent_model: ${{ inputs.agent-model }}
+        agent_timeout_sec: ${{ inputs.agent-timeout-sec }}
+        prompt_profile: ${{ inputs.prompt-profile }}
+        signal_types: ${{ inputs.signal-types }}
+        max_batches: ${{ inputs.max-batches }}
+        rescan_strategy: ${{ inputs.rescan-strategy }}
+        fail_on: ${{ inputs.fail-on }}
+        proof_fail_on: ${{ inputs.proof-fail-on }}
+        scan_extra_flags: ${{ inputs.scan-extra-flags }}
+        create_pr: ${{ inputs.create-pr }}
+        publish_report: ${{ inputs.publish-report }}
+        upload_artifacts: ${{ inputs.upload-artifacts }}
+        publish_pages: ${{ inputs.publish-pages }}
+        artifact_name: ${{ inputs.artifact-name }}
+        require_ai: ${{ inputs.require-ai }}
+        fresh_scan: ${{ inputs.fresh-scan }}
+        reachable_dist_repo: ${{ inputs.reachable-dist-repo }}
+        openai_api_key: ${{ inputs.openai-api-key || env.OPENAI_API_KEY }}
+        anthropic_api_key: ${{ inputs.anthropic-api-key || env.ANTHROPIC_API_KEY }}
+        reachable_api_key: ${{ inputs.reachable-api-key || env.REACHABLE_API_KEY }}
+        reachable_github_token: ${{ inputs.reachable-github-token || env.REACHABLE_GITHUB_TOKEN }}
+        mcp_github_token: ${{ inputs.mcp-github-token || env.MCP_GITHUB_TOKEN }}

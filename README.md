@@ -1,11 +1,20 @@
-# reach-testbed-github-marketplace
+# REACHABLE For GitHub Marketplace
 
-REACHABLE GitHub marketplace remediation demo.
+Repository: `reach-testbed-github-marketplace`
 
-This repo is the public marketplace-facing full remediation example. It uses
-the reusable [`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github)
-toolkit, keeps the Go sample app and proof-page workflow, and defaults to the
-Codex remediation lane while still allowing the user to switch AI modes.
+REACHABLE GitHub Marketplace distribution repo.
+
+This repo is the public Marketplace distribution surface for REACHABLE on
+GitHub. It uses the reusable
+[`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github)
+toolkit and defaults to the Codex remediation lane while still allowing the
+user to switch AI modes.
+
+The repository also exposes a root GitHub Action metadata file,
+[`action.yml`](action.yml), so GitHub can list REACHABLE in the Actions
+Marketplace. That Marketplace action delegates to
+`sthenos-security/reach-ci-github@v1`, which is the GitHub equivalent of the
+GitLab catalog repo importing `reach-ci-gitlab`.
 
 > Do not deploy this application. The vulnerabilities are deliberate synthetic
 > fixtures for scanner validation and controlled demos only.
@@ -16,18 +25,89 @@ Codex remediation lane while still allowing the user to switch AI modes.
 
 | Repo | Role |
 |------|------|
-| `reach-testbed-github` | Standalone GitHub scan and Marketplace action demo |
-| `reach-testbed-github-marketplace` | Full GitHub marketplace/remediation example |
+| `reach-testbed-github` | Standalone GitHub scan demo |
+| `reach-testbed-github-marketplace` | Marketplace distribution surface plus the configurable root action |
 | `reach-ci-github` | Reusable GitHub remediation toolkit |
+| `reach-testbed-github-go` | Go/public-clone remediation proof demo with explicit provider workflows |
+
+The full GitHub and GitLab repo map is in [REPOSITORIES.md](REPOSITORIES.md).
+
+## GitHub Marketplace Action
+
+GitHub Marketplace publishes the single root action from this repo. The action
+defaults to `openai-codex` and exposes the provider switch through `ai-mode`,
+so one Marketplace listing can serve both Codex and Claude lanes.
+
+Use it like this:
+
+```yaml
+name: Reachable Security
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  security-events: write
+
+jobs:
+  reachable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Scan with Reachable
+        uses: sthenos-security/reach-testbed-github-marketplace@v1
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MCP_GITHUB_TOKEN: ${{ secrets.MCP_GITHUB_TOKEN }}
+        with:
+          ai-mode: openai-codex
+          remediate: "true"
+          create-pr: "true"
+          fail-on: exploitable
+          publish-report: "true"
+
+      - name: Upload Reachable artifacts
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: reachable-ci-artifacts
+          path: .reachable/ci-artifacts/**
+          if-no-files-found: ignore
+```
+
+If you want the toolkit directly without the Marketplace shim, call
+[`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github)
+instead:
+
+```yaml
+jobs:
+  reachable:
+    uses: sthenos-security/reach-ci-github/.github/workflows/auto-remediate.yml@v1
+    with:
+      target_branch: main
+      remediate: true
+      create_pr: true
+      ai_mode: openai-codex
+      fail_on: exploitable
+      proof_fail_on: exploitable
+    secrets: inherit
+```
+
+GitHub Marketplace indexes actions from a public repository's root
+`action.yml`. This repo does not need separate public demo workflows because
+the runnable Codex and Claude demos live in
+[`reach-testbed-github-go`](https://github.com/sthenos-security/reach-testbed-github-go).
 
 ## Token Setup
 
 **An AI key must be configured before using Reachable.** Use one public lane
-selector, `ai_mode`, and one matching GitHub Actions secret. The same key is
+selector, `ai-mode`, and one matching GitHub Actions secret. The same key is
 used for Reachable scan AI and the selected remediation coding-agent
 integration.
 
-For customer-facing marketplace runs, configure `MCP_GITHUB_TOKEN` as well. It
+For customer-facing Marketplace runs, configure `MCP_GITHUB_TOKEN` as well. It
 materially improves clone/source/package access and should be treated as part
 of the expected higher-data-quality setup. Reachable uses this token for
 GitHub-hosted source reads, MCP GitHub cloning, and the explicit plain git
@@ -56,55 +136,43 @@ branch and prints a manual PR path instead of hiding the auth failure.
 `MCP_GITHUB_TOKEN` is a read-only source token, not a CI control or remediation
 write token.
 
+The GitHub equivalent of the catalog repo's publish path is therefore simpler:
+the built-in `GITHUB_TOKEN` is the write path for remediation branches, PRs,
+artifacts, and Pages, while `MCP_GITHUB_TOKEN` stays read-only source context.
+
 ## Defaults
 
-The marketplace demo defaults to the strongest remediation path:
+The Marketplace action defaults to the remediation path:
 
 | Workflow input | Default | Purpose |
 |----------------|---------|---------|
-| `ai_mode` | `openai-codex` | Default OpenAI + Codex remediation lane. |
-| `remediate` | `true` | Run code-changing remediation by default in the marketplace demo. |
-| `rescan_only` | `false` | Run the full baseline, remediation, proof-scan flow. |
-| `fail_on` | `exploitable` | Customer-facing scan/proof threshold. |
-| `proof_fail_on` | `exploitable` | Explicit post-remediation proof threshold. |
-| `fresh_scan` | `true` | Prove a clean public install and scan path. |
+| `ai-mode` | `openai-codex` | Default OpenAI + Codex remediation lane. |
+| `remediate` | `true` | Run code-changing remediation by default. |
+| `rescan-only` | `false` | Run the full baseline, remediation, proof-scan flow. |
+| `fail-on` | `exploitable` | Customer-facing scan/proof threshold. |
+| `proof-fail-on` | `fail-on` when empty | Post-remediation proof threshold. |
+| `create-pr` | `true` | Open a remediation PR after the branch is pushed. |
+| `publish-report` | `true` | Build the proof page and structured exports. |
+| `publish-pages` | `false` | Leave Pages off unless the caller explicitly wants deployment. |
 
 ## AI Modes
 
-| `ai_mode` | Required key | Reachable scan provider | Remediation coding agent |
+| `ai-mode` | Required key | Reachable scan provider | Remediation coding agent |
 |-----------|--------------|-------------------------|--------------------------|
 | `openai-gpt` | `OPENAI_API_KEY` | OpenAI | Not allowed when remediation is enabled |
 | `openai-codex` | `OPENAI_API_KEY` | OpenAI | Codex |
 | `anthropic-claude` | `ANTHROPIC_API_KEY` | Anthropic / Claude | Claude Code |
 
-The toolkit sanitizes inputs before invoking `reachctl`. Scan jobs derive
-exactly one provider argument from `ai_mode`: `--ai-provider openai` for
-`openai-gpt` and `openai-codex`, or `--ai-provider claude` for
-`anthropic-claude`. When `remediate=true`, `openai-gpt` fails fast with a clear
-scan-only error.
-
-## Workflows
-
-| Workflow | Purpose |
-|----------|---------|
-| `Run Demo (Codex)` | Full marketplace remediation demo using `openai-codex`. |
-| `Run Demo (Claude)` | Same full demo using `anthropic-claude`. |
-| `Reset Demo` | Deletes old `reachable-remediate-*` demo branches before a fresh run. |
-
-The workflow wrappers are intentionally small:
-
-- [.github/workflows/reachable-remediate.yml](.github/workflows/reachable-remediate.yml)
-- [.github/workflows/reachable-remediate-claude.yml](.github/workflows/reachable-remediate-claude.yml)
-
-Both call:
-
-```yaml
-uses: sthenos-security/reach-ci-github/.github/workflows/auto-remediate.yml@v1
-```
+The Marketplace action delegates to `reach-ci-github@v1`, which sanitizes the
+inputs before invoking `reachctl`. Scan jobs derive exactly one provider
+argument from `ai-mode`: `--ai-provider openai` for `openai-gpt` and
+`openai-codex`, or `--ai-provider claude` for `anthropic-claude`. When
+`remediate=true`, `openai-gpt` fails fast with a clear scan-only error.
 
 ## Expected Result
 
-A successful full run creates a `reachable-remediate-*` branch, runs the
+When a customer calls this Marketplace action from their own workflow, it
+creates a `reachable-remediate-*` branch when remediation is enabled, runs the
 selected coding agent with bounded instructions, rescans that branch, publishes
 sanitized proof artifacts, and opens a pull request when GitHub allows
 automatic PR creation.
@@ -114,11 +182,8 @@ generated for platform compatibility, but it is only an export report.
 
 ## Public Evidence
 
-The workflow publishes sanitized evidence only:
-
-After a successful Pages deployment, the public proof page is available at:
-
-<https://sthenos-security.github.io/reach-testbed-github-marketplace/>
+The Marketplace action produces the same sanitized artifacts as
+`reach-ci-github@v1` in the caller repository:
 
 | Artifact | Purpose |
 |----------|---------|
@@ -128,7 +193,7 @@ After a successful Pages deployment, the public proof page is available at:
 | `reachable-report.json` | Structured Reachable findings export when available. |
 | `reachable-summary.txt` | Plain-text Reachable summary when available. |
 
-The workflow must not publish raw remediation bundles, prompt text, generated
+The action must not publish raw remediation bundles, prompt text, generated
 rule packs, agent transcripts, raw witnesses, or local databases.
 
 ## Local Validation
