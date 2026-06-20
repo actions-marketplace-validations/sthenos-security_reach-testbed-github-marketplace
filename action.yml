@@ -59,6 +59,10 @@ inputs:
     description: Extra reachctl scan flags to append.
     required: false
     default: ""
+  scan-mode:
+    description: Use real for Reachable scanner execution, or nop for CI integration smoke tests without scanner or agent execution.
+    required: false
+    default: real
   create-pr:
     description: Open a remediation PR when a branch is pushed successfully.
     required: false
@@ -155,6 +159,7 @@ runs:
         fail_on: ${{ inputs.fail-on }}
         proof_fail_on: ${{ inputs.proof-fail-on }}
         scan_extra_flags: ${{ inputs.scan-extra-flags }}
+        scan_mode: ${{ inputs.scan-mode }}
         create_pr: ${{ inputs.create-pr }}
         publish_report: ${{ inputs.publish-report }}
         upload_artifacts: ${{ inputs.upload-artifacts }}
