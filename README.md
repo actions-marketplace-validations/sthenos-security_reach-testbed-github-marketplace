@@ -25,10 +25,9 @@ GitLab catalog repo importing `reach-ci-gitlab`.
 
 | Repo | Role |
 |------|------|
-| `reach-testbed-github` | Standalone GitHub scan demo |
-| `reach-testbed-github-marketplace` | Marketplace distribution surface plus the configurable root action |
+| `reach-testbed-github-marketplace` | GitHub Marketplace repo plus the configurable root action |
 | `reach-ci-github` | Reusable GitHub remediation toolkit |
-| `reach-testbed-github-go` | Go/public-clone remediation proof demo with explicit provider workflows |
+| `reach-testbed-github-go` | Public GitHub demo repo with explicit provider workflows and scan-only mode |
 
 The full GitHub and GitLab repo map is in [REPOSITORIES.md](REPOSITORIES.md).
 
