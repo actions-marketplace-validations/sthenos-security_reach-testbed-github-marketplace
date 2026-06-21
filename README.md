@@ -4,15 +4,17 @@ Repository: `reach-testbed-github-marketplace`
 
 ΣREACHABLE GitHub Marketplace distribution repo.
 
+Made by Sthenos Security.
+
 This repo is the public Marketplace distribution surface for REACHABLE on
-GitHub. Use it for code exploitability analysis and risk posture reduction in
-GitHub Actions. It uses the reusable
+GitHub. Use it for proof-backed risk exposure reduction in GitHub Actions. It
+uses the reusable
 [`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github)
 toolkit and defaults to the Codex remediation lane while still allowing the
 user to switch AI modes.
 
 `ΣREACHABLE` is the visual brand mark. The searchable Marketplace action name
-remains `Reachable Security Scan and Remediation`, and configuration examples
+is `REACHABLE Risk Exposure Reduction`, and configuration examples
 use `REACHABLE` / `reachable` names so users can find and install the action
 without typing the sigma character.
 
@@ -23,7 +25,7 @@ Marketplace. That Marketplace action delegates to
 GitLab catalog repo importing `reach-ci-gitlab`.
 
 > Do not deploy this application. The vulnerabilities are deliberate synthetic
-> fixtures for scanner validation and controlled demos only.
+> fixtures for REACHABLE validation and controlled demos only.
 
 ![Reachable CI remediation flow](docs/remediation-flow.svg)
 
@@ -31,7 +33,7 @@ GitLab catalog repo importing `reach-ci-gitlab`.
 
 | Repo | Role |
 |------|------|
-| [`Reachable Security Scan and Remediation`](https://github.com/marketplace/actions/reachable-security-scan-and-remediation) | GitHub Marketplace action for customer installation |
+| [`REACHABLE Risk Exposure Reduction`](https://github.com/marketplace/actions/reachable-risk-exposure-reduction) | GitHub Marketplace action for customer installation |
 | [`reachable` GitLab Catalog component](https://gitlab.com/explore/catalog/sthenos-security-public/reach-testbed-gitlab-catalog) | GitLab Catalog component for customer installation |
 | `reach-testbed-github-marketplace` | GitHub Marketplace distribution repo plus the configurable root action |
 | `reach-ci-github` | Reusable GitHub remediation toolkit |
@@ -45,8 +47,8 @@ Use the public entrypoint for your CI/CD platform:
 
 | Platform | Entrypoint | Purpose |
 |----------|------------|---------|
-| GitHub Actions | [Reachable Security Scan and Remediation](https://github.com/marketplace/actions/reachable-security-scan-and-remediation) | Marketplace action for code exploitability analysis and risk posture reduction in GitHub Actions |
-| GitLab CI/CD | [`reachable` Catalog component](https://gitlab.com/explore/catalog/sthenos-security-public/reach-testbed-gitlab-catalog) | Catalog component for code exploitability analysis and risk posture reduction in GitLab CI/CD |
+| GitHub Actions | [REACHABLE Risk Exposure Reduction](https://github.com/marketplace/actions/reachable-risk-exposure-reduction) | Marketplace action for proof-backed risk exposure reduction in GitHub Actions |
+| GitLab CI/CD | [`reachable` Catalog component](https://gitlab.com/explore/catalog/sthenos-security-public/reach-testbed-gitlab-catalog) | Catalog component for proof-backed risk exposure reduction in GitLab CI/CD |
 
 ## GitHub Marketplace Action
 
@@ -57,7 +59,7 @@ so one Marketplace listing can serve both Codex and Claude lanes.
 Use it like this:
 
 ```yaml
-name: Reachable Security
+name: REACHABLE Risk Exposure Reduction
 
 on:
   workflow_dispatch:
@@ -72,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Scan with Reachable
+      - name: Reduce risk exposure with REACHABLE
         uses: sthenos-security/reach-testbed-github-marketplace@v1
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -231,13 +233,13 @@ argument from `ai-mode`: `--ai-provider openai` for `openai-gpt` and
 ## Expected Result
 
 When a customer calls this Marketplace action from their own workflow, it
-creates a `reachable-remediate-*` branch when remediation is enabled, runs the
-selected coding agent with bounded instructions, rescans that branch, publishes
-sanitized proof artifacts, and opens a pull request when GitHub allows
-automatic PR creation.
+identifies the exposure that matters, creates a `reachable-remediate-*` branch
+when remediation is enabled, runs the selected coding agent with bounded
+instructions, rescans that branch for proof, publishes sanitized evidence, and
+opens a pull request when GitHub allows automatic PR creation.
 
-The scan database is the source of truth for the demo verdict. SARIF is
-generated for platform compatibility, but it is only an export report.
+The REACHABLE evidence database is the source of truth for the demo verdict.
+SARIF is generated for platform compatibility, but it is only an export report.
 
 ## Public Evidence
 
@@ -265,8 +267,8 @@ python3 ci/smoke-db-remediation-proof.py
 python3 ci/smoke-pages-summary.py
 ```
 
-After a Reachable scan has produced `repo.db` and SARIF artifacts, validate the
-scanner output against the golden baseline:
+After REACHABLE has produced `repo.db` and SARIF artifacts, validate the
+evidence output against the golden baseline:
 
 ```bash
 python3 ci/validate-expected-results.py \

@@ -1,6 +1,6 @@
-name: Reachable Security Scan and Remediation
+name: REACHABLE Risk Exposure Reduction
 author: Sthenos Security
-description: Code exploitability analysis and risk posture reduction for GitHub Actions.
+description: Proof-backed risk exposure reduction for GitHub Actions by Sthenos Security.
 
 branding:
   icon: shield

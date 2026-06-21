@@ -9,7 +9,7 @@ full remediation and scan-only runs with remediation disabled.
 
 | Surface | Primary role | Use this when |
 |---|---|---|
-| [`Reachable Security Scan and Remediation`](https://github.com/marketplace/actions/reachable-security-scan-and-remediation) | GitHub Marketplace action for customer installation. | You want the Marketplace entrypoint for code exploitability analysis and risk posture reduction in GitHub Actions. |
+| [`REACHABLE Risk Exposure Reduction`](https://github.com/marketplace/actions/reachable-risk-exposure-reduction) | GitHub Marketplace action for customer installation. | You want the Marketplace entrypoint for proof-backed risk exposure reduction in GitHub Actions. |
 | [`reach-testbed-github-marketplace`](https://github.com/sthenos-security/reach-testbed-github-marketplace) | GitHub Marketplace distribution repo plus the configurable root action. | You need the README, action metadata, or implementation wrapper behind the Marketplace listing. |
 | [`reach-ci-github`](https://github.com/sthenos-security/reach-ci-github) | Reusable GitHub Actions toolkit for production auto-remediation. | You want the recommended customer workflow with branch creation, proof scan, optional PR, artifacts, and Pages proof. |
 | [`reach-testbed-github-go`](https://github.com/sthenos-security/reach-testbed-github-go) | Public GitHub demo repo. | You want runnable Codex and Claude demos, public source cloning, MCP GitHub cloning, git clone fallback, post-remediation proof, or a scan-only sample with remediation disabled. |
