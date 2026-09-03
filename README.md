@@ -120,11 +120,16 @@ jobs:
 ```
 
 GitHub Marketplace indexes actions from a public repository's root
-`action.yml`. This repo does not need separate public demo workflows because
-the runnable Codex and Claude demos live in
-[`reach-testbed-github-go`](https://github.com/sthenos-security/reach-testbed-github-go).
-That Go demo repo also carries the public Copilot campaign verifier/parity
-workflow used to prove the multi-PR campaign path.
+`action.yml`. This repo also carries its own remediation workflow at
+`.github/workflows/reachable-remediate.yml`. Manual dispatch runs the local
+Marketplace action against this repository and can execute the Codex, Claude, or
+hosted Copilot remediation lanes. Push runs stay on `scan-mode=nop`, so they
+validate the action wiring without scanner or agent execution.
+
+The runnable Go demos still live in
+[`reach-testbed-github-go`](https://github.com/sthenos-security/reach-testbed-github-go),
+including the public Copilot campaign verifier/parity workflow used to prove
+the multi-PR campaign path.
 
 ## CI/CD Demo Examples
 
@@ -133,6 +138,7 @@ before wiring REACHABLE into another project:
 
 | Platform | Demo |
 |----------|------|
+| GitHub Marketplace | [`reach-testbed-github-marketplace`](https://github.com/sthenos-security/reach-testbed-github-marketplace/actions/workflows/reachable-remediate.yml) |
 | GitHub Actions | [`reach-testbed-github-go`](https://github.com/sthenos-security/reach-testbed-github-go) |
 | GitLab CI/CD | [`reach-testbed-gitlab-go`](https://gitlab.com/sthenos-security-public/reach-testbed-gitlab-go) |
 
@@ -217,6 +223,18 @@ The GitHub equivalent of the catalog repo's publish path is therefore simpler:
 the built-in `GITHUB_TOKEN` is the write path for remediation branches, PRs,
 artifacts, and Pages, while `MCP_GITHUB_TOKEN` stays read-only source context.
 
+## CI Agent Trust Model
+
+This Marketplace repo is the public GitHub reference and demo surface. The
+synchronous Codex/Claude lanes run the selected coding agent non-interactively
+with repository write authority on a generated remediation branch; the
+`copilot-github` lane dispatches hosted GitHub Copilot tasks that produce
+reviewable PRs. That is expected for the reference path. The trust boundary is
+the GitHub workflow and repository policy: protected branches, trusted runners,
+masked provider keys, `GITHUB_TOKEN` permissions, fork-workflow approval, and
+human review before merge. Do not run code-changing remediation from untrusted
+forks or workflows that can expose CI secrets.
+
 ## Defaults
 
 The Marketplace action defaults to the remediation path:
@@ -231,6 +249,11 @@ The Marketplace action defaults to the remediation path:
 | `create-pr` | `true` | Open a remediation PR after the branch is pushed. |
 | `publish-report` | `true` | Build the proof page and structured exports. |
 | `publish-pages` | `false` | Leave Pages off unless the caller explicitly wants deployment. |
+
+The Marketplace demo workflow uses a 240-minute outer GitHub job timeout. The
+inner `agent-timeout-sec` input still controls each coding-agent batch; the
+outer timeout covers install, scans, proof, artifact publishing, and PR
+handling.
 
 ## AI Modes
 
