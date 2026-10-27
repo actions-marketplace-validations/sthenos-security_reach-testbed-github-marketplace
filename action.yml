@@ -1,6 +1,6 @@
 name: REACHABLE Risk Exposure Reduction
 author: Sthenos Security
-description: Proof-backed risk exposure reduction for GitHub Actions by Sthenos Security, with Codex, Claude, and hosted Copilot remediation lanes.
+description: Early access (beta). AI SAST/SCA with reachability and exploitability proof. Proposes fix PRs. You merge.
 
 branding:
   icon: shield
@@ -12,7 +12,7 @@ inputs:
     required: false
     default: ""
   remediate:
-    description: Run code-changing remediation instead of a read-only proof scan.
+    description: Propose code fixes (branch/PR or Copilot tasks) instead of a read-only proof scan. Does not merge.
     required: false
     default: "true"
   rescan-only:
@@ -32,11 +32,11 @@ inputs:
     required: false
     default: "1800"
   prompt-profile:
-    description: Reachable remediation prompt profile.
+    description: Legacy ledger metadata only; remediae profile is owned by installed reachctl (CI does not pass --profile).
     required: false
     default: balanced
   signal-types:
-    description: Comma-separated signal families, or all.
+    description: Comma-separated signal families, or all (default scope; does not pass --all).
     required: false
     default: all
   max-batches:
@@ -64,7 +64,7 @@ inputs:
     required: false
     default: real
   create-pr:
-    description: Open a remediation PR when a branch is pushed successfully.
+    description: Open a reviewable remediation PR when a branch is pushed. Merge stays with humans or their tools.
     required: false
     default: "true"
   publish-report:
